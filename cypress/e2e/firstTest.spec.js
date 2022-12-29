@@ -4,7 +4,7 @@ describe('Our First Suite', () => {
 
 
   it('first Test', () => {
-
+/*
     cy.visit('/')
     cy.contains('Forms').click()
     cy.contains('Form Layouts').click()
@@ -38,8 +38,34 @@ describe('Our First Suite', () => {
 
     //? THE MOST RECOMENDED WAY IS CREATE YOUR OWN SELECTORES
     cy.get('input[data-cy="imputEmail1"]')
+    */
+  })
+
+  it('Second Test', () => {
+
+    cy.visit('/')
+    cy.contains('Forms').click()
+    cy.contains('Form Layouts').click()
+
+    cy.get('[data-cy="signInButton"]')
     
-    
+    cy.contains('Sign in')
+
+    cy.contains('[status="warning"]','Sign in')
+    //! con este cogemos los 8
+    cy.get('#inputEmail3')
+        .parents('form')
+        .get('button')
+    //! con este cogemos el que esta dentro del filtro
+    cy.get('#inputEmail3')
+      .parents('form')
+      .find('button')
+      .should('contain','Sign in')
+      .parents('form')
+      .find('nb-checkbox')
+      .click()
+
+      cy.contains('nb-card','Horizontal form').find('[type="email"]')
   })
 
 })
