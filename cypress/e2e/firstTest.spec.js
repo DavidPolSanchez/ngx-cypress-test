@@ -4,7 +4,7 @@ describe('Our First Suite', () => {
 
 
   it('first Test', () => {
-/*
+
     cy.visit('/')
     cy.contains('Forms').click()
     cy.contains('Form Layouts').click()
@@ -38,7 +38,7 @@ describe('Our First Suite', () => {
 
     //? THE MOST RECOMENDED WAY IS CREATE YOUR OWN SELECTORES
     cy.get('input[data-cy="imputEmail1"]')
-    */
+    
   })
 
   it('Second Test', () => {
@@ -52,11 +52,12 @@ describe('Our First Suite', () => {
     cy.contains('Sign in')
 
     cy.contains('[status="warning"]','Sign in')
-    //! con este cogemos los 8
+
+    // con este cogemos los 8
     cy.get('#inputEmail3')
         .parents('form')
         .get('button')
-    //! con este cogemos el que esta dentro del filtro
+    // con este cogemos el que esta dentro del filtro
     cy.get('#inputEmail3')
       .parents('form')
       .find('button')
@@ -68,4 +69,89 @@ describe('Our First Suite', () => {
       cy.contains('nb-card','Horizontal form').find('[type="email"]')
   })
 
+  it('Then and wrap methods', () => {
+
+    cy.visit('/')
+    cy.contains('Forms').click()
+    cy.contains('Form Layouts').click()
+
+    //*loking for the secod card
+    //cy.contains('nb-card','Using the Grid').find('[for="inputEmail1"]').should('contain','Email')
+    //cy.contains('nb-card','Using the Grid').find('[for="inputPassword2"]').should('contain','Password')  
+    //cy.contains('nb-card','Basic form').find('[for="exampleInputEmail1"]').should('contain','Email address')
+    //cy.contains('nb-card','Basic form').find('[for="exampleInputPassword1"]').should('contain','Password')  
+
+    //!Selenium Not GOOD -Cypress is asincronous and doesn't manage this way the variables.
+      //const firstForm = cy.contains('nb-card','Using the Grid')
+      //const secondForm = cy.contains('nb-card','Basic form')
+
+      //firstForm.find('[for="inputEmail1"]').should('contain','Email')
+      //firstForm.find('[for="inputPassword2"]').should('contain','Password')
+      //secondForm.find('[for="exampleInputEmail1"]').should('contain','Email address')
+
+    //!CYPRESS STYLE
+
+      cy.contains('nb-card','Using the Grid').then(firstForm => {
+        //Jquery 
+        const emailLabelFirst = firstForm.find('[for="inputEmail1"]').text()
+        const passwordLabelFirst = firstForm.find('[for="inputPassword2"]').text()
+        expect(emailLabelFirst).to.equal('Email')
+        expect(passwordLabelFirst).to.equal('Password')
+
+        cy.contains('nb-card','Basic form').then(secondForm => {
+          const passwordSecondText = secondForm.find('[for="exampleInputPassword1"]').text()
+          expect(passwordLabelFirst).to.equal(passwordSecondText)
+
+          //!use wrap to change context from jquery to cypress
+          cy.wrap(secondForm).find('[for="exampleInputPassword1"]').should('contain', 'Password')
+        })
+      })
+
+  })
+  it.only('invoke command', () => {
+
+    cy.visit('/')
+    cy.contains('Forms').click()
+    cy.contains('Form Layouts').click()
+
+    //1
+    cy.get('[for="exampleInputEmail1"]').should('contain', 'Email address')
+
+    //2 using jquery  method
+    cy.get('[for="exampleInputEmail1"]').then(label => {
+      expect(label.text()).to.equal('Email address')
+    })
+
+    //3 using cypress method
+    cy.get('[for="exampleInputEmail1"]').invoke('text').then( text => {
+      expect(text).to.equal('Email address')
+    })
+
+    //4
+    cy.contains('nb-card', 'Basic form')
+        .find('nb-checkbox')
+        .click()
+        .find('.custom-checkbox')
+        .invoke('attr','class')
+          //.should('contain','checked')
+        .then(classValue=>{
+              expect(classValue).to.contain('checked')
+        })
+  })
+
+
+
+  it.only('assert property', () => {
+
+    cy.visit('/')
+    cy.contains('Forms').click()
+    cy.contains('Datepicker').click()
+
+    cy.contains('nb-card','Common Datepicker')
+      .find('input').then(input => {
+        cy.wrap(input).click()
+        cy.get('nb-calendar-day-picker').contains('17').click()
+        cy.wrap(input).invoke('prop','value').should('contain','Dec 17, 2019')
+      })
+  })
 })
