@@ -255,7 +255,7 @@ describe('Our First Suite', () => {
     })
   })
 
-  it.only('Pro DatePicker',() =>{
+  it('Pro DatePicker',() =>{
     //funtionregion
     function selectDayFromCurrent(day){
       let date = new Date() 
@@ -285,8 +285,50 @@ describe('Our First Suite', () => {
       cy.wrap(input).invoke('prop','value').should('contain',dateAssert)
     })
   })
-})
 
+  //how to treack Tooltips
+  it('tooltip',() =>{
+    cy.visit('/')
+    cy.contains('Modal & Overlays').click()
+    cy.contains('Tooltip').click()
+
+    cy.contains('nb-card','Colored Tooltips')
+        .contains('Default').click()
+    cy.get('nb-tooltip').should('contain','This is a tooltip')
+  })
+ // how to treat hover(basically with click elements, if you want to do a hover, you have to create your own method)
+  it('Hover and Validate Text using trigger(\'mouseover\')',  () =>{
+    cy.visit('https://www.amazon.com/')
+    cy.get('[data-csa-c-content-id="nav_ya_signin"]').trigger('mouseover')
+    cy.contains('Create a List').click()
+    cy.url().should('include','wishlist/intro')
+  })
+  //chromedialog boxes
+  it.only('dialog box',  () =>{
+    cy.visit('/')
+    cy.contains('Tables & Data').click()
+    cy.contains('Smart Table').click()
+
+    //1
+      cy.get('tbody tr').first().find('.nb-trash').click()
+      cy.on('window:confirm',(confirm)=>{
+        expect(confirm).to.equal('Are you sure you want to delete?')
+      })
+    
+    //2 
+      const stub = cy.stub()
+      cy.on('window:confirm', stub)
+      cy.get('tbody tr').first().find('.nb-trash').click().then( () => {
+        expect(stub.getCall(0)).to.be.calledWith('Are you sure you want to delete?')
+      })
+    
+    //3
+      cy.get('tbody tr').first().find('.nb-trash').click()
+      cy.on('window:confirm', () => false )
+    
+  })
+
+})
 
 
 
