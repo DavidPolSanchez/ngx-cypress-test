@@ -116,11 +116,16 @@ describe('Our First Suite', () => {
     cy.contains('Form Layouts').click()
 
     //1
-    cy.get('[for="exampleInputEmail1"]').should('contain', 'Email address')
+    cy.get('[for="exampleInputEmail1"]')
+    .should('contain', 'Email address')
+    .should('have.class','label')
+    .should('have.text','Email address')
 
     //2 using jquery  method
     cy.get('[for="exampleInputEmail1"]').then(label => {
       expect(label.text()).to.equal('Email address')
+      expect(label).to.have.text('Email address')
+      expect(label).to.have.class('label')
     })
 
     //3 using cypress method
@@ -283,6 +288,7 @@ describe('Our First Suite', () => {
       cy.wrap(input).click()
       let dateAssert = selectDayFromCurrent(7)
       cy.wrap(input).invoke('prop','value').should('contain',dateAssert)
+      cy.wrap(input).should('have.value', dateAssert)
     })
   })
 
