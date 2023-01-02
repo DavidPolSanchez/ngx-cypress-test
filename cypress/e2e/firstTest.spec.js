@@ -109,7 +109,7 @@ describe('Our First Suite', () => {
 
   })
 
-  it.only('invoke command', () => {
+  it('invoke command', () => {
 
     cy.visit('/')
     cy.contains('Forms').click()
@@ -171,7 +171,7 @@ describe('Our First Suite', () => {
     })
   })  
 
-  it.only('assert event', () => {
+  it('assert event', () => {
 
     cy.visit('/')
     cy.contains('Modal & Overlays').click()
@@ -182,7 +182,6 @@ describe('Our First Suite', () => {
     cy.get('[type="checkbox"]').eq(1).check({force: true})
     
   })
-
 
   it('lists and dropdowns', () => {
     cy.visit('/')
@@ -253,6 +252,37 @@ describe('Our First Suite', () => {
         }
         
       })
+    })
+  })
+
+  it.only('Pro DatePicker',() =>{
+    //funtionregion
+    function selectDayFromCurrent(day){
+      let date = new Date() 
+      date.setDate(date.getDate() + day)
+      let futureDay = date.getDate() 
+      let futureMonth = date.toLocaleDateString('default',{month:'short'})
+      let dateAssert = futureMonth + ' ' + futureDay +', '+date.getFullYear()
+      cy.get('nb-calendar-navigation').invoke('attr','ng-reflect-date').then( dateAttribute => {
+        if(!dateAttribute.includes(futureMonth)){
+          cy.get('[ata-name="chevron-right"]').click()
+          selectDayFromCurrentMonth(day)
+        }else{
+          cy.get('nb-calendar-day-picker [class="day-cell ng-star-inserted"]').contains(futureDay).first().click()
+        }
+      })
+      return dateAssert
+    }
+    //end function region 
+
+    cy.visit('/')
+    cy.contains('Forms').click()
+    cy.contains('Datepicker').click()
+
+    cy.contains('nb-card','Common Datepicker').find('input').then( input => {
+      cy.wrap(input).click()
+      let dateAssert = selectDayFromCurrent(7)
+      cy.wrap(input).invoke('prop','value').should('contain',dateAssert)
     })
   })
 })
