@@ -11,12 +11,12 @@ function selectgroupItem(groupName){
 export class navigationPage{
   
   formLayoutsPage(){
-    selectgroupItem('Form')
+    selectgroupItem('Forms')
     cy.contains('Form Layouts').click()
   }
 
   datePickerPage(){
-    selectgroupItem('Form')
+    selectgroupItem('Forms')
     cy.contains('Datepicker').click()
   }
 
