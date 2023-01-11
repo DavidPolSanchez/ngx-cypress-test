@@ -4,8 +4,8 @@ import { onDatePickerPage } from "../support/page_objects/datepickerPage"
 
 describe("Test with Page Objects", () => {
 
-    beforeEach(() => {
-        cy.visit("/")
+    beforeEach('open aplication',() => {
+        cy.openHomePage()
             
     })
 
